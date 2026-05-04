@@ -1,0 +1,55 @@
+Prompt: Cinematic Jaipur → New Delhi Satellite Flyover (Remotion)
+                                                                                
+  Create a 9-second cinematic Remotion map animation (1920×1080, 30fps, 270
+  frames) using MapLibre GL with Esri World Imagery raster tiles (free, no token
+   required) for a realistic satellite/Google Earth–style basemap. Apply Esri
+  raster paint adjustments (raster-saturation: -0.25, raster-brightness-max:    
+  0.92, raster-contrast: 0.05) plus a CSS filter: saturate(0.7) brightness(0.82)
+   contrast(1.08) over the map container to achieve a desaturated, moody,
+  documentary look. Dark navy background #05070a underneath. No nightlights, no
+  neon.
+
+  Camera storyboard (frame-driven, no Mapbox built-in animations):              
+  - 0–2s — Hold close-up on Jaipur [75.7873, 26.9124] at zoom 9.2, pitch 50°.
+  - 2–4s — Smoothly ease zoom out to 6.35 while keeping Jaipur centered, pitch  
+  easing to 38°. Easing: Easing.bezier(0.4, 0, 0.2, 1).                       
+  - 4–9s — Drone-style glide from Jaipur to New Delhi [77.2090, 28.6139] along a
+   curved arc, zoom drifting 6.35 → 6.85, pitch settling to 34°. Subtle         
+  sinusoidal bearing drift (~±0.5°) for cinematic inertia. Easing:              
+  Easing.bezier(0.42, 0, 0.2, 1).                                 
+                                                                                
+  Curved route line:                                              
+  - Quadratic Bézier with one control point offset perpendicular to the         
+  Jaipur–Delhi axis (bend = 0.18°), sampled into 161 points.                    
+  - Two-layer line: a thin warm-white core (#fff5dc, width 1.6, 95% opacity)    
+  over a soft underglow (#ffe8c2, width 7, blur 6, 35% opacity) — elegant,      
+  minimal, soft glow but not bright.                                            
+  - Line draws progressively from frame ~126 to ~261 in sync with the camera
+  flight. Camera follows the same curve via linear interpolation between bezier 
+  samples.                                                                      
+   
+  City markers + labels:                                                        
+  - White-cream dots (radius 5, stroke 1.5px, soft halo radius 16, 22% opacity)
+  at Jaipur and New Delhi.                                                      
+  - HTML overlay labels rendered on top of the canvas: JAIPUR and NEW DELHI in
+  uppercase, letter-spacing 3, weight 500, 28px sans-serif, color #fff5dc, with 
+  a triple-stack text shadow for legibility on satellite imagery. Positions are 
+  recomputed each frame via map.project([lng, lat]) so they stick to their     
+  cities through camera moves. Fade in from 0.6s → 1.4s.                        
+                                                                  
+  Cinematic post effects (layered AbsoluteFills, all pointerEvents: none):
+  1. Soft Gaussian blur on the map: 4px → 0 over the first 0.5s, 0 → 2.5px over 
+  the last 0.5s.                                                                
+  2. Radial vignette: transparent at center → rgba(0,0,0,0.85) at the corners.  
+  3. Top/bottom dark gradient bars (rgba(8,10,14,0.35–0.45)).                   
+  4. Warm multiply tint rgba(20,16,12,0.18) for moody color grading.            
+  5. Black intro veil (1 → 0 over 0.6s) and outro veil (0 → 0.55 over the last  
+  0.8s) for a clean fade-in/fade-out.                                           
+                                                                                
+  Implementation notes:                                                         
+  - All animation driven by useCurrentFrame() + interpolate() + Easing.bezier.  
+  No CSS transitions, no Tailwind animation classes, no Mapbox flyTo / easeTo.  
+  - useDelayRender to gate the initial map load and each per-frame idle event.
+  - map.jumpTo({ center, zoom, bearing, pitch }) called every frame.            
+  - Render command: npx remotion render MyComp out.mp4 --gl=angle               
+  --concurrency=1.        

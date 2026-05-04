@@ -1,0 +1,478 @@
+# Premium Cinematic Map Animation — Reusable Prompt
+
+Paste this entire file into Claude (claude.ai, Claude Code, or any agent with shell + file write access) after filling in the **CONFIG** block below. The agent will produce a polished 14-second 1080p MP4 animating your origin → destination route in the same explainer style.
+
+---
+
+## ✏️ STEP 1 — Fill in CONFIG
+
+```yaml
+project_path: "/Users/YOU/Movies/route-animation"
+
+origin:
+  name: "Jaipur"                      # shown big in pill label
+  coords: [75.7873, 26.9124]          # [lng, lat] — right-click Google Maps to copy
+  subtitle: "Rajasthan, India"        # uppercase line under the city name
+  region_code: "RAJASTHAN"            # MUST match a value in admin GeoJSON's name field
+
+destination:
+  name: "Delhi"
+  coords: [77.209, 28.6139]
+  subtitle: "National Capital Territory"
+  region_code: "DELHI"
+
+route:
+  title_accent: "The Northern Route"  # tagline above big headline
+  total_distance_km: 240
+  establish_center: [78, 25]          # wide-shot center, between the two cities
+  composition_id: "JaipurToDelhi"     # internal Remotion id
+
+country:
+  admin_geojson_url: "https://raw.githubusercontent.com/datta07/INDIAN-SHAPEFILES/master/INDIA/INDIA_STATES.geojson"
+  name_field: "STNAME"                # property holding region names
+```
+
+### Admin GeoJSON sources by country
+
+| Country | URL | Field |
+|---|---|---|
+| India | `datta07/INDIAN-SHAPEFILES/master/INDIA/INDIA_STATES.geojson` | `STNAME` |
+| USA | `PublicaMundi/MappingAPI/master/data/geojson/us-states.json` | `name` |
+| World countries | `datasets/geo-countries/master/data/countries.geojson` | `ADMIN` |
+
+Verify the field name and exact region values:
+
+```bash
+curl -sL "<URL>" -o /tmp/admin.geojson
+node -e "const j=JSON.parse(require('fs').readFileSync('/tmp/admin.geojson')); console.log(Object.keys(j.features[0].properties)); j.features.forEach(f=>console.log(f.properties.STNAME||f.properties.NAME_1||f.properties.name))"
+```
+
+The values in that output go into `region_code` (case-sensitive).
+
+---
+
+## 🎬 STEP 2 — What the agent builds
+
+A 14-second 1920×1080 H.264 MP4 with seven phases @ 30 fps:
+
+| Frames | Time | What |
+|---|---|---|
+| 0 → 75 | 0–2.5s | Title card: tagline, huge `Origin → Destination`, km subtitle. Map at intro zoom 5.7. |
+| 75 → 105 | 2.5–3.5s | Title fades. Both regions glow gold with bright borders. |
+| 105 → 180 | 3.5–6s | Cinematic zoom IN to origin (6.1 → 12). Pill label fades in. |
+| 180 → 210 | 6–7s | Hold close-up. Cyan ring pulses around dot. |
+| 210 → 255 | 7–8.5s | Zoom OUT to regional view (12 → 7.2). |
+| 255 → 375 | 8.5–12.5s | Camera travels origin → destination. Glowing dashed cyan line draws. Distance counter ticks 0 → total km bottom-right. Destination label fades in. |
+| 375 → 420 | 12.5–14s | Settle on destination, slight pull-back to 6.7. |
+
+**Style:** Esri satellite tiles dimmed/desaturated. Gold regions (`#F0A832` fill, `#FFD54F` border). Cyan accent (`#80DEEA`, `#4FC3F7`). Inter / SF Pro typography. Soft vignette.
+
+**Animation rules (Remotion's Mapbox skill):**
+- Every property — zoom, center, line geometry, opacities — set every frame from `useCurrentFrame()`. No CSS transitions, no `flyTo`/`easeTo`.
+- `interactive: false`, `fadeDuration: 0`.
+- `useDelayRender` with two handles: one for map load, one per-frame released on `map.once("idle", …)`.
+- Straight Mercator line: linear `lng`/`lat` interpolation. **Never `turf.along`** (curves on sphere).
+- No `_map.remove()` cleanup.
+- Render: `--gl=angle --concurrency=1`.
+
+---
+
+## 🛠️ STEP 3 — Execute
+
+### 3.1 Bootstrap
+
+```bash
+mkdir -p "<project_path>/src" "<project_path>/public" "<project_path>/out"
+cd "<project_path>"
+```
+
+Write each file at the path shown.
+
+**`package.json`**
+
+```json
+{
+  "name": "route-animation",
+  "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remotion/cli": "4.0.457",
+    "@turf/turf": "7.2.0",
+    "maplibre-gl": "4.7.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.457"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render <composition_id> out/route.mp4 --gl=angle --concurrency=1 --crf=18 --pixel-format=yuv420p"
+  },
+  "sideEffects": ["*.css"]
+}
+```
+
+**`tsconfig.json`**
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src"]
+}
+```
+
+**`remotion.config.ts`**
+
+```ts
+import { Config } from "@remotion/cli/config";
+Config.setVideoImageFormat("jpeg");
+Config.setOverwriteOutput(true);
+```
+
+**`src/index.ts`**
+
+```ts
+import { registerRoot } from "remotion";
+import { RemotionRoot } from "./Root";
+registerRoot(RemotionRoot);
+```
+
+**`src/index.css`**
+
+```css
+@import "maplibre-gl/dist/maplibre-gl.css";
+```
+
+**`src/Root.tsx`**
+
+```tsx
+import "./index.css";
+import { Composition } from "remotion";
+import { RouteAnimation, FPS, DURATION_IN_FRAMES, WIDTH, HEIGHT } from "./Composition";
+
+export const RemotionRoot: React.FC = () => (
+  <Composition
+    id="<composition_id>"
+    component={RouteAnimation}
+    durationInFrames={DURATION_IN_FRAMES}
+    fps={FPS}
+    width={WIDTH}
+    height={HEIGHT}
+  />
+);
+```
+
+### 3.2 Fetch + filter region polygons
+
+```bash
+curl -sL "<admin_geojson_url>" -o /tmp/admin.geojson
+node -e "
+const fs=require('fs');
+const j=JSON.parse(fs.readFileSync('/tmp/admin.geojson'));
+const want=['<origin.region_code>','<destination.region_code>'];
+const out={type:'FeatureCollection',features:j.features.filter(f=>want.includes(f.properties['<country.name_field>'])).map(f=>({type:'Feature',properties:{name:f.properties['<country.name_field>']},geometry:f.geometry}))};
+if(out.features.length!==2){console.error('Got',out.features.length,'features — region_code mismatch');process.exit(1)}
+fs.writeFileSync('public/route-regions.geojson',JSON.stringify(out));
+console.log('OK',out.features.length,'features',fs.statSync('public/route-regions.geojson').size,'bytes');
+"
+rm /tmp/admin.geojson
+```
+
+### 3.3 `src/Composition.tsx`
+
+Replace only the values inside the **CONFIG** block at the top.
+
+```tsx
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AbsoluteFill, Easing, interpolate, staticFile, useCurrentFrame, useDelayRender, useVideoConfig } from "remotion";
+import maplibregl, { Map, StyleSpecification } from "maplibre-gl";
+
+// =========================================================================
+// 🎬 CONFIG — swap these for your route
+// =========================================================================
+const ORIGIN = {
+  name: "<origin.name>",
+  coords: [<origin.coords[0]>, <origin.coords[1]>] as [number, number],
+  subtitle: "<origin.subtitle>",
+};
+const DESTINATION = {
+  name: "<destination.name>",
+  coords: [<destination.coords[0]>, <destination.coords[1]>] as [number, number],
+  subtitle: "<destination.subtitle>",
+};
+const ESTABLISH_CENTER: [number, number] = [<route.establish_center[0]>, <route.establish_center[1]>];
+const TOTAL_DISTANCE_KM = <route.total_distance_km>;
+const TITLE_ACCENT = "<route.title_accent>";
+// =========================================================================
+
+export const FPS = 30;
+export const WIDTH = 1920;
+export const HEIGHT = 1080;
+export const DURATION_IN_FRAMES = 420;
+
+const TITLE_HOLD_END = 75;
+const TITLE_FADE_END = 105;
+const ZOOM_IN_END = 180;
+const HOLD_ORIGIN_END = 210;
+const ZOOM_OUT_END = 255;
+const TRAVEL_END = 375;
+
+const ZOOM_INTRO = 5.7;
+const ZOOM_ESTABLISH = 6.1;
+const ZOOM_CLOSEUP = 12.0;
+const ZOOM_TRAVEL = 7.2;
+const ZOOM_FINAL = 6.7;
+
+const cineEase = Easing.bezier(0.7, 0, 0.3, 1);
+const softEase = Easing.bezier(0.45, 0, 0.55, 1);
+
+const STYLE: StyleSpecification = {
+  version: 8,
+  sources: {
+    satellite: {
+      type: "raster",
+      tiles: ["https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+      tileSize: 256, maxzoom: 18, attribution: "Tiles © Esri",
+    },
+  },
+  layers: [
+    { id: "bg", type: "background", paint: { "background-color": "#000000" } },
+    {
+      id: "sat", type: "raster", source: "satellite",
+      paint: { "raster-saturation": -0.6, "raster-brightness-min": 0.04, "raster-brightness-max": 0.45, "raster-contrast": 0.2 },
+    },
+  ],
+};
+
+const FONT = '"Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif';
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+export const RouteAnimation: React.FC = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { delayRender, continueRender } = useDelayRender();
+  const { width, height } = useVideoConfig();
+  const frame = useCurrentFrame();
+
+  const [mapLoadHandle] = useState(() => delayRender("Loading map..."));
+  const [map, setMap] = useState<Map | null>(null);
+  const [labels, setLabels] = useState({
+    origin: { x: 0, y: 0, opacity: 0 },
+    destination: { x: 0, y: 0, opacity: 0 },
+  });
+
+  useEffect(() => {
+    const _map = new maplibregl.Map({
+      container: ref.current!, style: STYLE,
+      center: ESTABLISH_CENTER, zoom: ZOOM_INTRO,
+      pitch: 0, bearing: 0, interactive: false, fadeDuration: 0, attributionControl: false,
+    });
+
+    _map.on("load", async () => {
+      try {
+        const res = await fetch(staticFile("route-regions.geojson"));
+        const data = await res.json();
+        _map.addSource("regions", { type: "geojson", data });
+        _map.addLayer({
+          id: "region-fill", type: "fill", source: "regions",
+          paint: { "fill-color": "#F0A832", "fill-opacity": 0 },
+        });
+        _map.addLayer({
+          id: "region-line", type: "line", source: "regions",
+          paint: { "line-color": "#FFD54F", "line-width": 2.5, "line-blur": 1, "line-opacity": 0 },
+          layout: { "line-cap": "round", "line-join": "round" },
+        });
+      } catch (e) { console.error(e); }
+
+      _map.addSource("trace", {
+        type: "geojson",
+        data: { type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: [ORIGIN.coords, ORIGIN.coords] } },
+      });
+      _map.addLayer({
+        id: "trace-glow", type: "line", source: "trace",
+        paint: { "line-color": "#4FC3F7", "line-width": 18, "line-blur": 10, "line-opacity": 0.55 },
+        layout: { "line-cap": "round", "line-join": "round" },
+      });
+      _map.addLayer({
+        id: "trace-line", type: "line", source: "trace",
+        paint: { "line-color": "#80DEEA", "line-width": 5, "line-dasharray": [2.5, 1.6], "line-opacity": 0.95 },
+        layout: { "line-cap": "round", "line-join": "round" },
+      });
+
+      continueRender(mapLoadHandle);
+      setMap(_map);
+    });
+  }, [mapLoadHandle, continueRender]);
+
+  useEffect(() => {
+    if (!map) return;
+    const handle = delayRender(`Frame ${frame}`);
+
+    const zoom = interpolate(
+      frame,
+      [0, TITLE_HOLD_END, TITLE_FADE_END, ZOOM_IN_END, HOLD_ORIGIN_END, ZOOM_OUT_END, TRAVEL_END, DURATION_IN_FRAMES - 1],
+      [ZOOM_INTRO, ZOOM_INTRO, ZOOM_ESTABLISH, ZOOM_CLOSEUP, ZOOM_CLOSEUP, ZOOM_TRAVEL, ZOOM_TRAVEL, ZOOM_FINAL],
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: cineEase },
+    );
+    const zoomInProgress = interpolate(frame, [TITLE_FADE_END, ZOOM_IN_END], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: cineEase });
+    const travelProgress = interpolate(frame, [ZOOM_OUT_END, TRAVEL_END], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: softEase });
+
+    let centerLng: number, centerLat: number;
+    if (frame < ZOOM_IN_END) {
+      centerLng = lerp(ESTABLISH_CENTER[0], ORIGIN.coords[0], zoomInProgress);
+      centerLat = lerp(ESTABLISH_CENTER[1], ORIGIN.coords[1], zoomInProgress);
+    } else if (frame < ZOOM_OUT_END) {
+      centerLng = ORIGIN.coords[0]; centerLat = ORIGIN.coords[1];
+    } else {
+      centerLng = lerp(ORIGIN.coords[0], DESTINATION.coords[0], travelProgress);
+      centerLat = lerp(ORIGIN.coords[1], DESTINATION.coords[1], travelProgress);
+    }
+    const lineEndLng = lerp(ORIGIN.coords[0], DESTINATION.coords[0], travelProgress);
+    const lineEndLat = lerp(ORIGIN.coords[1], DESTINATION.coords[1], travelProgress);
+
+    map.setZoom(zoom);
+    map.setCenter([centerLng, centerLat]);
+
+    const trace = map.getSource("trace") as maplibregl.GeoJSONSource | undefined;
+    if (trace) {
+      trace.setData({
+        type: "Feature", properties: {},
+        geometry: { type: "LineString", coordinates: [ORIGIN.coords, [lineEndLng, lineEndLat]] },
+      });
+    }
+
+    const fillOp = interpolate(frame, [TITLE_HOLD_END, TITLE_FADE_END + 30], [0, 0.28], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+    const lineOp = interpolate(frame, [TITLE_HOLD_END, TITLE_FADE_END + 30], [0, 0.92], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+    if (map.getLayer("region-fill")) map.setPaintProperty("region-fill", "fill-opacity", fillOp);
+    if (map.getLayer("region-line")) map.setPaintProperty("region-line", "line-opacity", lineOp);
+
+    const op = map.project(ORIGIN.coords);
+    const dp = map.project(DESTINATION.coords);
+    setLabels({
+      origin: { x: op.x, y: op.y, opacity: interpolate(frame, [165, 195], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) },
+      destination: { x: dp.x, y: dp.y, opacity: interpolate(frame, [240, 280], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) },
+    });
+
+    map.once("idle", () => continueRender(handle));
+  }, [map, frame, delayRender, continueRender]);
+
+  const mapStyle: React.CSSProperties = useMemo(() => ({ width, height, position: "absolute", top: 0, left: 0 }), [width, height]);
+
+  const titleOpacity = interpolate(frame, [0, 15, TITLE_HOLD_END - 15, TITLE_HOLD_END, TITLE_FADE_END], [0, 1, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: cineEase });
+  const titleSlide = interpolate(frame, [0, 30], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: cineEase });
+  const travelUI = interpolate(frame, [ZOOM_OUT_END, TRAVEL_END], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: softEase });
+  const distanceCardOp = interpolate(frame, [ZOOM_OUT_END - 15, ZOOM_OUT_END + 15, TRAVEL_END + 15, DURATION_IN_FRAMES - 5], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
+  const pulseT = (frame % 30) / 30;
+  const pulseScale = 1 + pulseT * 1.6;
+  const pulseOpacity = (1 - pulseT) * 0.55;
+
+  return (
+    <AbsoluteFill style={{ backgroundColor: "#000" }}>
+      <div ref={ref} style={mapStyle} />
+      <AbsoluteFill style={{ background: "radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.65) 100%)", pointerEvents: "none" }} />
+      <CityMarker x={labels.origin.x} y={labels.origin.y} opacity={labels.origin.opacity} name={ORIGIN.name} subtitle={ORIGIN.subtitle} pulseScale={pulseScale} pulseOpacity={pulseOpacity} />
+      <CityMarker x={labels.destination.x} y={labels.destination.y} opacity={labels.destination.opacity} name={DESTINATION.name} subtitle={DESTINATION.subtitle} pulseScale={pulseScale} pulseOpacity={pulseOpacity} />
+      {titleOpacity > 0.01 && <TitleCard opacity={titleOpacity} slideY={titleSlide} />}
+      {distanceCardOp > 0.01 && <DistanceCard distance={travelUI * TOTAL_DISTANCE_KM} progress={travelUI} opacity={distanceCardOp} />}
+    </AbsoluteFill>
+  );
+};
+
+const TitleCard: React.FC<{ opacity: number; slideY: number }> = ({ opacity, slideY }) => (
+  <AbsoluteFill style={{ pointerEvents: "none", opacity }}>
+    <div style={{ position: "absolute", top: "38%", left: "50%", transform: `translate(-50%, calc(-50% + ${slideY}px))`, textAlign: "center", fontFamily: FONT, color: "white" }}>
+      <div style={{ fontSize: 18, letterSpacing: "0.5em", textTransform: "uppercase", color: "#80DEEA", fontWeight: 600, marginBottom: 28, paddingLeft: "0.5em" }}>{TITLE_ACCENT}</div>
+      <div style={{ fontSize: 132, fontWeight: 800, letterSpacing: "-0.025em", lineHeight: 0.95, textShadow: "0 8px 36px rgba(0,0,0,0.75)" }}>
+        {ORIGIN.name}<span style={{ fontWeight: 200, color: "#80DEEA", fontSize: 110, margin: "0 28px", verticalAlign: "0.05em" }}>→</span>{DESTINATION.name}
+      </div>
+      <div style={{ fontSize: 22, fontWeight: 400, color: "rgba(255,255,255,0.75)", letterSpacing: "0.08em", marginTop: 36, textTransform: "uppercase" }}>
+        {TOTAL_DISTANCE_KM} km · {ORIGIN.subtitle} to {DESTINATION.subtitle}
+      </div>
+    </div>
+  </AbsoluteFill>
+);
+
+const CityMarker: React.FC<{ x: number; y: number; opacity: number; name: string; subtitle: string; pulseScale: number; pulseOpacity: number }> = ({ x, y, opacity, name, subtitle, pulseScale, pulseOpacity }) => {
+  if (opacity <= 0.01) return null;
+  const PILL_OFFSET_Y = -120, PILL_H = 86, DOT_R = 11, PULSE_BASE = 26;
+  return (
+    <>
+      <div style={{ position: "absolute", left: x - (PULSE_BASE * pulseScale) / 2, top: y - (PULSE_BASE * pulseScale) / 2, width: PULSE_BASE * pulseScale, height: PULSE_BASE * pulseScale, borderRadius: "50%", border: "2px solid #80DEEA", opacity: pulseOpacity * opacity, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: x - 0.75, top: y + PILL_OFFSET_Y + PILL_H / 2, width: 1.5, height: -PILL_OFFSET_Y - PILL_H / 2 - DOT_R - 2, background: "rgba(255,255,255,0.7)", opacity, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: x - DOT_R, top: y - DOT_R, width: DOT_R * 2, height: DOT_R * 2, borderRadius: "50%", background: "white", opacity, boxShadow: "0 0 18px rgba(255,255,255,0.55)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: x - 5.5, top: y - 5.5, width: 11, height: 11, borderRadius: "50%", background: "#0a0a0a", opacity, pointerEvents: "none" }} />
+      <div style={{ position: "absolute", left: x, top: y + PILL_OFFSET_Y, transform: "translate(-50%, -50%)", background: "rgba(15,15,18,0.92)", border: "1px solid rgba(255,255,255,0.22)", borderRadius: 999, padding: "14px 32px", whiteSpace: "nowrap", fontFamily: FONT, color: "white", textAlign: "center", opacity, boxShadow: "0 10px 28px rgba(0,0,0,0.5)", pointerEvents: "none" }}>
+        <div style={{ fontSize: 38, fontWeight: 700, lineHeight: 1, letterSpacing: "-0.01em" }}>{name}</div>
+        <div style={{ fontSize: 12, opacity: 0.55, marginTop: 6, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500 }}>{subtitle}</div>
+      </div>
+    </>
+  );
+};
+
+const DistanceCard: React.FC<{ distance: number; progress: number; opacity: number }> = ({ distance, progress, opacity }) => (
+  <div style={{ position: "absolute", bottom: 80, right: 80, padding: "24px 32px", borderRadius: 18, background: "rgba(15,15,18,0.85)", border: "1px solid rgba(255,255,255,0.15)", fontFamily: FONT, color: "white", opacity, boxShadow: "0 16px 40px rgba(0,0,0,0.55)", minWidth: 320, pointerEvents: "none" }}>
+    <div style={{ fontSize: 11, letterSpacing: "0.28em", textTransform: "uppercase", opacity: 0.5, fontWeight: 600 }}>Distance Traveled</div>
+    <div style={{ display: "flex", alignItems: "baseline", marginTop: 8, gap: 10 }}>
+      <span style={{ fontSize: 60, fontWeight: 800, lineHeight: 1, fontVariantNumeric: "tabular-nums", letterSpacing: "-0.02em" }}>{Math.round(distance)}</span>
+      <span style={{ fontSize: 22, opacity: 0.6, fontWeight: 500 }}>/ {TOTAL_DISTANCE_KM} km</span>
+    </div>
+    <div style={{ marginTop: 18, height: 4, background: "rgba(255,255,255,0.12)", borderRadius: 2, overflow: "hidden" }}>
+      <div style={{ height: "100%", width: `${progress * 100}%`, background: "linear-gradient(90deg, #4FC3F7, #80DEEA)", borderRadius: 2, boxShadow: "0 0 14px rgba(128,222,234,0.7)" }} />
+    </div>
+  </div>
+);
+```
+
+### 3.4 Install, type-check, render
+
+```bash
+cd "<project_path>"
+npm install
+npx tsc --noEmit
+npx remotion render <composition_id> out/route.mp4 --gl=angle --concurrency=1 --crf=18 --pixel-format=yuv420p
+open out/route.mp4
+```
+
+Expected: ~25–30 MB, 14.06s, 1920×1080.
+
+---
+
+## 🎨 Tweak knobs
+
+| Want to change | Where |
+|---|---|
+| Region gold | `#F0A832` (fill) and `#FFD54F` (border) |
+| Line color | `#80DEEA` (main) and `#4FC3F7` (glow + arrow + progress) |
+| Title hold longer | `TITLE_HOLD_END` (75) and `TITLE_FADE_END` (105) |
+| Closer zoom | `ZOOM_CLOSEUP` (12.0) |
+| Slower travel | Move `TRAVEL_END` later, bump `DURATION_IN_FRAMES` by same |
+| Darker map | `raster-brightness-max` (0.45 — lower = darker) |
+
+---
+
+## 🐛 Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| WebGL error on render | Try `--gl=swiftshader` instead of `--gl=angle` |
+| Region invisible | `region_code` mismatch — re-run inspect command in Step 1 |
+| GeoJSON URL 404 | Search GitHub for `<country> states geojson` |
+| Tiles fail to load | Switch to OpenFreeMap: replace `STYLE` with `style: "https://tiles.openfreemap.org/styles/positron"` |
+| Black opening frames | Verify `continueRender(mapLoadHandle)` is inside `_map.on("load", ...)` |
