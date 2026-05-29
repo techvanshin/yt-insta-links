@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Advantage Masterclass teaches practical AI workflows for productivity, automation, content creation, research, and business growth." />
+  <title>AI Advantage Masterclass</title>
+  <style>
+    :root {
+      --bg: #060814;
+      --bg-2: #0a1024;
+      --surface: rgba(255, 255, 255, 0.075);
+      --surface-strong: rgba(255, 255, 255, 0.12);
+      --surface-soft: rgba(255, 255, 255, 0.045);
+      --line: rgba(255, 255, 255, 0.14);
+      --line-strong: rgba(127, 214, 255, 0.34);
+      --text: #f6f8ff;
+      --muted: #a8b4cf;
+      --muted-2: #7785a8;
+      --blue: #3a7dff;
+      --blue-2: #60a5ff;
+      --cyan: #4fe7ff;
+      --violet: #8b5cf6;
+      --pink: #e879f9;
+      --green: #58f5b6;
+      --warning: #ffd166;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+      --shadow-blue: 0 18px 48px rgba(58, 125, 255, 0.28);
+      --radius: 8px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(79, 231, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 86% 4%, rgba(139, 92, 246, 0.22), transparent 30%),
+        radial-gradient(circle at 70% 72%, rgba(58, 125, 255, 0.18), transparent 34%),
+        linear-gradient(135deg, #050711 0%, #071022 42%, #0e1029 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 88%);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(120deg, rgba(79, 231, 255, 0.05), transparent 24%, rgba(232, 121, 249, 0.06) 54%, transparent 76%),
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 42%);
+      pointer-events: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page-shell {
+      width: min(100% - 40px, var(--max));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 104px 0;
+      position: relative;
+    }
+
+    .section-tight {
+      padding: 76px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      color: #c9eaff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 11px;
+      border: 1px solid rgba(79, 231, 255, 0.24);
+      border-radius: var(--radius);
+      background: rgba(79, 231, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 99px;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(88, 245, 182, 0.9);
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 42px;
+    }
+
+    .section-heading.center {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 22px;
+      font-size: clamp(3.05rem, 7vw, 6.45rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.02rem;
+      line-height: 1.35;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .lead {
+      max-width: 670px;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      color: #c5cce0;
+    }
+
+    .gradient-text {
+      background: linear-gradient(100deg, #ffffff 8%, #b9d8ff 36%, #80f3ff 58%, #d7b7ff 86%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1;
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      color: #04101f;
+      background: linear-gradient(135deg, #65efff 0%, #7fa7ff 50%, #d9b4ff 100%);
+      box-shadow: var(--shadow-blue), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    .btn-secondary {
+      color: #eef6ff;
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 24px 70px rgba(79, 231, 255, 0.34);
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(79, 231, 255, 0.38);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-arrow {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(6, 8, 20, 0.72);
+      backdrop-filter: blur(22px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 78px;
+      gap: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.02rem;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(79, 231, 255, 0.35);
+      border-radius: var(--radius);
+      color: #ecfbff;
+      background:
+        linear-gradient(135deg, rgba(79, 231, 255, 0.24), rgba(139, 92, 246, 0.24)),
+        rgba(255, 255, 255, 0.06);
+      box-shadow: 0 12px 28px rgba(58, 125, 255, 0.2);
+      font-size: 0.78rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .nav-links a {
+      padding: 10px 13px;
+      border-radius: 6px;
+      color: #c4cce1;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.07);
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      margin: 4px auto;
+      border-radius: 99px;
+      background: currentColor;
+      transition: transform 180ms ease, opacity 180ms ease;
+    }
+
+    .menu-toggle.is-open span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .menu-toggle.is-open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.is-open span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .hero {
+      min-height: calc(100vh - 78px);
+      display: grid;
+      align-items: center;
+      padding: 74px 0 96px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.03fr) minmax(360px, 0.97fr);
+      align-items: center;
+      gap: 56px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero .eyebrow {
+      margin-bottom: 22px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin: 34px 0 30px;
+    }
+
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 0 13px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.055);
+      color: #dce7ff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .trust-pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 16px rgba(79, 231, 255, 0.75);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 640px;
+      display: grid;
+      place-items: center;
+    }
+
+    .dashboard-wrap {
+      position: relative;
+      width: min(100%, 520px);
+      animation: floatPanel 7s ease-in-out infinite;
+    }
+
+    @keyframes floatPanel {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    .dashboard {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.045)),
+        rgba(10, 18, 42, 0.76);
+      box-shadow: var(--shadow), 0 0 0 1px rgba(79, 231, 255, 0.08);
+      backdrop-filter: blur(24px);
+    }
+
+    .dashboard::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(79, 231, 255, 0.16), transparent 28%, rgba(139, 92, 246, 0.14) 76%, transparent),
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: auto, 26px 26px, 26px 26px;
+      opacity: 0.76;
+      pointer-events: none;
+    }
+
+    .dashboard-top {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .window-dots span {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .window-dots span:nth-child(1) {
+      background: #ff7a90;
+    }
+
+    .window-dots span:nth-child(2) {
+      background: #ffd166;
+    }
+
+    .window-dots span:nth-child(3) {
+      background: #58f5b6;
+    }
+
+    .dashboard-status {
+      color: #dffcff;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .dashboard-body {
+      position: relative;
+      padding: 22px;
+    }
+
+    .ai-card {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid rgba(79, 231, 255, 0.24);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(79, 231, 255, 0.13), rgba(139, 92, 246, 0.12)),
+        rgba(255, 255, 255, 0.055);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .ai-icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      color: #04101f;
+      font-size: 0.84rem;
+      font-weight: 1000;
+      box-shadow: 0 14px 30px rgba(79, 231, 255, 0.24);
+    }
+
+    .ai-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.98rem;
+    }
+
+    .ai-card p {
+      margin: 0;
+      color: #bfcae4;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      padding: 14px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 3px;
+      color: #ffffff;
+      font-size: 1.28rem;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 750;
+    }
+
+    .workflow {
+      display: grid;
+      gap: 11px;
+      margin-top: 16px;
+    }
+
+    .workflow-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .workflow-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--blue-2);
+      box-shadow: 0 0 18px rgba(96, 165, 255, 0.68);
+    }
+
+    .workflow-item strong {
+      display: block;
+      font-size: 0.88rem;
+    }
+
+    .workflow-item span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .workflow-tag {
+      padding: 6px 8px;
+      border-radius: 6px;
+      color: #d9fbff;
+      background: rgba(79, 231, 255, 0.11);
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .progress-card {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 11px;
+      color: #e8f0ff;
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .progress-track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-fill {
+      width: 76%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--pink));
+      animation: fillPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes fillPulse {
+      0%,
+      100% {
+        filter: saturate(1);
+      }
+      50% {
+        filter: saturate(1.4);
+      }
+    }
+
+    .float-badge {
+      position: absolute;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 210px;
+      padding: 13px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(9, 15, 34, 0.82);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(18px);
+    }
+
+    .float-badge strong {
+      display: block;
+      color: #ffffff;
+      font-size: 0.84rem;
+      line-height: 1.2;
+    }
+
+    .float-badge span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .mini-symbol {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      color: #04101f;
+      background: linear-gradient(135deg, var(--cyan), var(--warning));
+      font-weight: 1000;
+    }
+
+    .float-badge.one {
+      top: 48px;
+      right: -24px;
+    }
+
+    .float-badge.two {
+      bottom: 58px;
+      left: -34px;
+    }
+
+    .logo-strip {
+      padding: 26px 0 56px;
+    }
+
+    .logo-panel {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: 16px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .logo-panel p {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 0.82rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .partner-list {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .partner-list span {
+      display: grid;
+      place-items: center;
+      min-height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      color: #d2d9ec;
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .problem-layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .problem-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 100%;
+      padding: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035)),
+        rgba(8, 14, 32, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .problem-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet), var(--pink));
+    }
+
+    .problem-list {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .problem-list li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.052);
+      transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    }
+
+    .problem-list li:hover {
+      transform: translateY(-3px);
+      border-color: rgba(79, 231, 255, 0.28);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .problem-number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      color: #061426;
+      background: linear-gradient(135deg, #7fefff, #c5abff);
+      font-size: 0.84rem;
+      font-weight: 1000;
+    }
+
+    .problem-list strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+
+    .problem-list p {
+      margin: 0;
+      color: #abb7d2;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .feature-card,
+    .benefit-card,
+    .module-card,
+    .testimonial-card,
+    .faq-item {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
+        rgba(9, 16, 36, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    .benefit-card {
+      position: relative;
+      min-height: 244px;
+      padding: 24px;
+      overflow: hidden;
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .benefit-card::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(79, 231, 255, 0.3);
+      box-shadow: 0 22px 46px rgba(0, 0, 0, 0.22);
+    }
+
+    .benefit-card:hover::after {
+      opacity: 1;
+    }
+
+    .card-icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      color: #ecfbff;
+      background:
+        linear-gradient(135deg, rgba(79, 231, 255, 0.22), rgba(139, 92, 246, 0.18)),
+        rgba(255, 255, 255, 0.06);
+      font-size: 1rem;
+      font-weight: 1000;
+      box-shadow: 0 12px 26px rgba(58, 125, 255, 0.14);
+    }
+
+    .benefit-card p {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .curriculum {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(79, 231, 255, 0.035)),
+        rgba(255, 255, 255, 0.01);
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      counter-reset: module;
+    }
+
+    .module-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      padding: 22px;
+      transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    }
+
+    .module-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, 0.34);
+      background:
+        linear-gradient(145deg, rgba(139, 92, 246, 0.13), rgba(79, 231, 255, 0.06)),
+        rgba(9, 16, 36, 0.78);
+    }
+
+    .module-number {
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius);
+      color: #04101f;
+      background: linear-gradient(135deg, #4fe7ff, #9d7cff);
+      font-weight: 1000;
+    }
+
+    .module-card p {
+      margin-bottom: 0;
+      color: #acb8d2;
+      font-size: 0.94rem;
+      line-height: 1.62;
+    }
+
+    .highlight-panel {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 28px;
+      align-items: stretch;
+      padding: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(79, 231, 255, 0.12), rgba(139, 92, 246, 0.11) 45%, rgba(255, 255, 255, 0.045)),
+        rgba(8, 14, 32, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .highlight-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .highlight-copy .eyebrow {
+      margin-bottom: 18px;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .stat-box {
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .stat-box strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #ffffff;
+      font-size: 1.55rem;
+    }
+
+    .stat-box span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .feature-card {
+      padding: 20px;
+      transition: transform 220ms ease, border-color 220ms ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79, 231, 255, 0.28);
+    }
+
+    .feature-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .check-mark {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: #061426;
+      background: var(--green);
+      font-size: 0.82rem;
+      font-weight: 1000;
+    }
+
+    .feature-card p {
+      margin-bottom: 0;
+      color: #adb9d3;
+      font-size: 0.91rem;
+      line-height: 1.6;
+    }
+
+    .testimonials-layout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .testimonial-card {
+      padding: 24px;
+      transition: transform 220ms ease, border-color 220ms ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(79, 231, 255, 0.28);
+    }
+
+    .stars {
+      margin-bottom: 18px;
+      color: var(--warning);
+      letter-spacing: 0;
+      font-size: 0.94rem;
+    }
+
+    .testimonial-card blockquote {
+      margin: 0 0 22px;
+      color: #d8deef;
+      line-height: 1.72;
+    }
+
+    .person {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #05111f;
+      background: linear-gradient(135deg, #7fefff, #cdb4ff);
+      font-size: 0.82rem;
+      font-weight: 1000;
+    }
+
+    .person strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .person span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
+    .pricing-section {
+      overflow: hidden;
+    }
+
+    .pricing-wrap {
+      display: grid;
+      grid-template-columns: 0.86fr minmax(340px, 0.7fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .pricing-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .pricing-points div {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d6def0;
+      font-weight: 750;
+    }
+
+    .pricing-card {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid rgba(79, 231, 255, 0.36);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(79, 231, 255, 0.18), rgba(139, 92, 246, 0.13) 46%, rgba(255, 255, 255, 0.06)),
+        rgba(7, 13, 30, 0.9);
+      box-shadow: 0 30px 90px rgba(58, 125, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .pricing-card::before {
+      content: "Best Value";
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 6px;
+      color: #04101f;
+      background: linear-gradient(135deg, #65efff, #ffd166);
+      font-size: 0.72rem;
+      font-weight: 1000;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .price-kicker {
+      margin-bottom: 10px;
+      color: #c6f8ff;
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 20px 0 10px;
+    }
+
+    .price strong {
+      color: #ffffff;
+      font-size: clamp(3rem, 7vw, 4.7rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .price span {
+      color: var(--muted);
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-decoration: line-through;
+    }
+
+    .pricing-card > p {
+      max-width: 430px;
+      margin-bottom: 22px;
+      color: #c4cee5;
+    }
+
+    .included-list {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .included-list li {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #e7eefc;
+      font-weight: 750;
+    }
+
+    .pricing-card .btn {
+      width: 100%;
+      min-height: 56px;
+    }
+
+    .guarantee {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      overflow: hidden;
+    }
+
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 68px;
+      gap: 22px;
+      padding: 0 22px;
+      border: 0;
+      color: #f4f7ff;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .faq-question::after {
+      content: "+";
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+      color: #dffbff;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 1.15rem;
+      line-height: 1;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .faq-item.is-open .faq-question::after {
+      transform: rotate(45deg);
+      background: rgba(79, 231, 255, 0.16);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 260ms ease;
+    }
+
+    .faq-answer p {
+      margin: 0;
+      padding: 0 22px 22px;
+      color: #aebbd7;
+    }
+
+    .final-cta {
+      padding: 92px 0;
+    }
+
+    .cta-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(34px, 7vw, 68px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(79, 231, 255, 0.16), rgba(58, 125, 255, 0.12) 38%, rgba(139, 92, 246, 0.18)),
+        rgba(8, 14, 32, 0.8);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .cta-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent),
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: auto, 34px 34px, 34px 34px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .cta-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-panel h2 {
+      margin-inline: auto;
+    }
+
+    .cta-panel p {
+      max-width: 650px;
+      margin: 0 auto 28px;
+      color: #cbd4e8;
+      font-size: 1.08rem;
+    }
+
+    .site-footer {
+      padding: 36px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .footer-brand p {
+      max-width: 520px;
+      margin: 14px 0 0;
+      color: var(--muted-2);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      color: #bec8dc;
+      font-size: 0.9rem;
+      font-weight: 750;
+      transition: color 180ms ease;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    .copyright {
+      margin: 22px 0 0;
+      color: #7785a8;
+      font-size: 0.84rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 650ms ease, transform 650ms ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1020px) {
+      .hero-grid,
+      .problem-layout,
+      .highlight-panel,
+      .pricing-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-visual {
+        min-height: auto;
+      }
+
+      .dashboard-wrap {
+        max-width: 620px;
+      }
+
+      .float-badge.one {
+        right: 12px;
+      }
+
+      .float-badge.two {
+        left: 12px;
+      }
+
+      .benefit-grid,
+      .testimonials-layout {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 840px) {
+      .page-shell {
+        width: min(100% - 28px, var(--max));
+      }
+
+      .nav {
+        min-height: 68px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-actions .btn {
+        display: none;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 1px);
+        left: 14px;
+        right: 14px;
+        display: grid;
+        justify-items: stretch;
+        gap: 4px;
+        padding: 10px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        border-radius: var(--radius);
+        background: rgba(8, 13, 30, 0.96);
+        box-shadow: var(--shadow);
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .nav-links.is-open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .nav-links a {
+        padding: 14px;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+
+      .hero-grid {
+        gap: 38px;
+      }
+
+      .logo-panel,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .partner-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .module-grid,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-links {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .section {
+        padding: 76px 0;
+      }
+
+      .section-tight {
+        padding: 56px 0;
+      }
+
+      h1 {
+        font-size: clamp(2.65rem, 14vw, 4.1rem);
+      }
+
+      .hero-actions,
+      .trust-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .trust-pill {
+        justify-content: center;
+      }
+
+      .dashboard-body {
+        padding: 16px;
+      }
+
+      .metric-grid,
+      .benefit-grid,
+      .testimonials-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-card,
+      .workflow-item,
+      .module-card,
+      .problem-list li {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-item {
+        align-items: start;
+      }
+
+      .workflow-tag {
+        width: fit-content;
+      }
+
+      .float-badge {
+        position: relative;
+        inset: auto;
+        margin-top: 12px;
+        max-width: 100%;
+      }
+
+      .float-badge.one,
+      .float-badge.two {
+        inset: auto;
+      }
+
+      .dashboard-wrap {
+        animation: none;
+      }
+
+      .problem-card,
+      .highlight-panel,
+      .pricing-card {
+        padding: 22px;
+      }
+
+      .pricing-card::before {
+        position: static;
+        display: inline-flex;
+        margin-bottom: 18px;
+      }
+
+      .price {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .faq-question {
+        min-height: 62px;
+        padding: 0 16px;
+        font-size: 0.95rem;
+      }
+
+      .faq-answer p {
+        padding: 0 16px 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav page-shell" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="AI Advantage home">
+        <span class="brand-mark">AI</span>
+        <span>AI Advantage</span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#curriculum">Curriculum</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="#pricing">Join Masterclass</a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="page-shell hero-grid">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">New 2026 AI Productivity Program</span>
+          <h1><span class="gradient-text">Master AI Tools Before Everyone Else Does</span></h1>
+          <p class="lead">Learn how to use AI to automate tasks, create better content, make smarter decisions, and save hours every week, even if you are not technical.</p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#pricing">Start Learning Today <span class="btn-arrow">-&gt;</span></a>
+            <a class="btn btn-secondary" href="#curriculum">View Curriculum</a>
+          </div>
+
+          <div class="trust-row" aria-label="Course trust indicators">
+            <div class="trust-pill"><span class="dot"></span>4.9/5 rating</div>
+            <div class="trust-pill"><span class="dot"></span>2,500+ learners</div>
+            <div class="trust-pill"><span class="dot"></span>Beginner friendly</div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" aria-label="AI productivity dashboard preview">
+          <div class="dashboard-wrap">
+            <div class="float-badge one">
+              <span class="mini-symbol">10x</span>
+              <div>
+                <strong>Workflow Boost</strong>
+                <span>Automations ready in minutes</span>
+              </div>
+            </div>
+
+            <div class="dashboard">
+              <div class="dashboard-top">
+                <div class="window-dots" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="dashboard-status">AI Advantage OS</div>
+              </div>
+
+              <div class="dashboard-body">
+                <div class="ai-card">
+                  <div class="ai-icon">AI</div>
+                  <div>
+                    <strong>Personal AI Workflow Builder</strong>
+                    <p>Turn your daily tasks into guided prompts, repeatable automations, and reusable productivity systems.</p>
+                  </div>
+                </div>
+
+                <div class="metric-grid" aria-label="Dashboard metrics">
+                  <div class="metric">
+                    <strong>12h</strong>
+                    <span>saved weekly</span>
+                  </div>
+                  <div class="metric">
+                    <strong>48</strong>
+                    <span>templates</span>
+                  </div>
+                  <div class="metric">
+                    <strong>6</strong>
+                    <span>modules</span>
+                  </div>
+                </div>
+
+                <div class="workflow">
+                  <div class="workflow-item">
+                    <span class="workflow-dot"></span>
+                    <div>
+                      <strong>Research brief generator</strong>
+                      <span>Find, summarize, and compare faster</span>
+                    </div>
+                    <span class="workflow-tag">Live</span>
+                  </div>
+                  <div class="workflow-item">
+                    <span class="workflow-dot"></span>
+                    <div>
+                      <strong>Content engine</strong>
+                      <span>Ideas, scripts, posts, and outlines</span>
+                    </div>
+                    <span class="workflow-tag">Ready</span>
+                  </div>
+                  <div class="workflow-item">
+                    <span class="workflow-dot"></span>
+                    <div>
+                      <strong>Business assistant</strong>
+                      <span>Emails, proposals, SOPs, analysis</span>
+                    </div>
+                    <span class="workflow-tag">Smart</span>
+                  </div>
+                </div>
+
+                <div class="progress-card">
+                  <div class="progress-head">
+                    <span>Masterclass progress</span>
+                    <span>76%</span>
+                  </div>
+                  <div class="progress-track" aria-hidden="true">
+                    <div class="progress-fill"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="float-badge two">
+              <span class="mini-symbol">24</span>
+              <div>
+                <strong>Prompt Vault</strong>
+                <span>Plug-and-play templates included</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="logo-strip" aria-label="Popular use cases">
+      <div class="page-shell">
+        <div class="logo-panel reveal">
+          <p>Built for practical AI use in</p>
+          <div class="partner-list">
+            <span>Study</span>
+            <span>Content</span>
+            <span>Business</span>
+            <span>Research</span>
+            <span>Automation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="problem">
+      <div class="page-shell problem-layout">
+        <div class="problem-card reveal">
+          <span class="eyebrow">The AI Gap</span>
+          <h2>AI is moving fast. Most people are still using it like a search box.</h2>
+          <p>Professionals who learn practical AI workflows can research faster, automate busywork, make sharper decisions, and ship better work with less friction.</p>
+          <p>The advantage is not knowing every tool. It is knowing how to combine the right tools into systems you can use every day.</p>
+        </div>
+
+        <ul class="problem-list reveal">
+          <li>
+            <span class="problem-number">01</span>
+            <div>
+              <strong>Basic prompts are no longer enough</strong>
+              <p>As AI tools become more powerful, casual experimentation creates inconsistent results and wasted time.</p>
+            </div>
+          </li>
+          <li>
+            <span class="problem-number">02</span>
+            <div>
+              <strong>Speed is becoming a career advantage</strong>
+              <p>Businesses, creators, and students who understand AI can move from idea to output much faster.</p>
+            </div>
+          </li>
+          <li>
+            <span class="problem-number">03</span>
+            <div>
+              <strong>Ignoring AI creates a widening skill gap</strong>
+              <p>The people who build repeatable AI systems now will be harder to compete with later.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="benefits">
+      <div class="page-shell">
+        <div class="section-heading center reveal">
+          <span class="eyebrow">What You Will Gain</span>
+          <h2>Turn AI from a novelty into a daily performance system.</h2>
+          <p class="lead">Learn the practical skills that help you save time, produce sharper work, and use AI confidently across real scenarios.</p>
+        </div>
+
+        <div class="benefit-grid">
+          <article class="benefit-card reveal">
+            <div class="card-icon">01</div>
+            <h3>Save 10+ hours every week</h3>
+            <p>Build repeatable workflows for research, writing, planning, admin tasks, and decision support.</p>
+          </article>
+
+          <article class="benefit-card reveal">
+            <div class="card-icon">02</div>
+            <h3>Write better prompts</h3>
+            <p>Use proven prompt structures that give AI clearer context, constraints, examples, and desired outputs.</p>
+          </article>
+
+          <article class="benefit-card reveal">
+            <div class="card-icon">03</div>
+            <h3>Automate repetitive tasks</h3>
+            <p>Identify work that can be delegated to AI and create simple systems that reduce manual effort.</p>
+          </article>
+
+          <article class="benefit-card reveal">
+            <div class="card-icon">04</div>
+            <h3>Create content faster</h3>
+            <p>Generate content ideas, outlines, scripts, posts, emails, and campaigns without starting from a blank page.</p>
+          </article>
+
+          <article class="benefit-card reveal">
+            <div class="card-icon">05</div>
+            <h3>Use AI for study and research</h3>
+            <p>Summarize dense material, compare sources, create study plans, and turn notes into usable knowledge.</p>
+          </article>
+
+          <article class="benefit-card reveal">
+            <div class="card-icon">06</div>
+            <h3>Build practical AI workflows</h3>
+            <p>Connect tools, templates, and decision frameworks into a personal AI operating system for daily work.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section curriculum" id="curriculum">
+      <div class="page-shell">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Curriculum</span>
+          <h2>Six focused modules. Built for immediate application.</h2>
+          <p class="lead">Each module turns a core AI skill into a practical workflow you can use for study, work, content, freelancing, or business growth.</p>
+        </div>
+
+        <div class="module-grid">
+          <article class="module-card reveal">
+            <span class="module-number">01</span>
+            <div>
+              <h3>AI Fundamentals for Beginners</h3>
+              <p>Understand how modern AI tools work, where they help, where they fail, and how to use them responsibly.</p>
+            </div>
+          </article>
+
+          <article class="module-card reveal">
+            <span class="module-number">02</span>
+            <div>
+              <h3>Prompt Engineering Mastery</h3>
+              <p>Learn prompt frameworks for better answers, sharper reasoning, structured outputs, and reusable templates.</p>
+            </div>
+          </article>
+
+          <article class="module-card reveal">
+            <span class="module-number">03</span>
+            <div>
+              <h3>AI for Productivity and Automation</h3>
+              <p>Design AI-assisted systems for email, meetings, planning, task management, documents, and operations.</p>
+            </div>
+          </article>
+
+          <article class="module-card reveal">
+            <span class="module-number">04</span>
+            <div>
+              <h3>AI for Content Creation</h3>
+              <p>Create posts, videos, scripts, newsletters, visuals briefs, hooks, and repurposing workflows faster.</p>
+            </div>
+          </article>
+
+          <article class="module-card reveal">
+            <span class="module-number">05</span>
+            <div>
+              <h3>AI for Business and Freelancing</h3>
+              <p>Use AI for offers, proposals, client research, SOPs, lead generation, customer support, and analysis.</p>
+            </div>
+          </article>
+
+          <article class="module-card reveal">
+            <span class="module-number">06</span>
+            <div>
+              <h3>Building Your Personal AI Workflow System</h3>
+              <p>Combine templates, tools, and habits into a practical system that keeps improving after the course.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="page-shell">
+        <div class="highlight-panel reveal">
+          <div class="highlight-copy">
+            <span class="eyebrow">Why It Works</span>
+            <h2>Practical AI training for people who need results, not theory overload.</h2>
+            <p class="lead">The masterclass is designed around real workflows, guided examples, templates, and repeatable systems so you can use AI with confidence in your actual work.</p>
+
+            <div class="stat-row" aria-label="Masterclass stats">
+              <div class="stat-box">
+                <strong>48+</strong>
+                <span>prompt templates</span>
+              </div>
+              <div class="stat-box">
+                <strong>30+</strong>
+                <span>workflow examples</span>
+              </div>
+              <div class="stat-box">
+                <strong>Lifetime</strong>
+                <span>course access</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <h3><span class="check-mark">✓</span>Practical, not theory-heavy</h3>
+              <p>Every lesson focuses on actions, examples, and outcomes you can apply immediately.</p>
+            </article>
+
+            <article class="feature-card">
+              <h3><span class="check-mark">✓</span>Real workflows</h3>
+              <p>See how AI fits into research, content, admin, business, studying, and daily productivity.</p>
+            </article>
+
+            <article class="feature-card">
+              <h3><span class="check-mark">✓</span>Templates included</h3>
+              <p>Use ready-made prompt packs, automation checklists, and workflow builders.</p>
+            </article>
+
+            <article class="feature-card">
+              <h3><span class="check-mark">✓</span>Beginner friendly</h3>
+              <p>No coding background required. The course starts simple and builds confidence step by step.</p>
+            </article>
+
+            <article class="feature-card">
+              <h3><span class="check-mark">✓</span>Lifetime access</h3>
+              <p>Revisit lessons, refresh templates, and keep improving your AI system over time.</p>
+            </article>
+
+            <article class="feature-card">
+              <h3><span class="check-mark">✓</span>Community support</h3>
+              <p>Learn alongside motivated students, creators, professionals, and business owners.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="testimonials">
+      <div class="page-shell">
+        <div class="section-heading center reveal">
+          <span class="eyebrow">Learner Results</span>
+          <h2>Real people using AI to work faster and think clearer.</h2>
+          <p class="lead">Students, creators, and professionals use the masterclass to replace random experimentation with repeatable AI systems.</p>
+        </div>
+
+        <div class="testimonials-layout">
+          <article class="testimonial-card reveal">
+            <div class="stars" aria-label="5 star rating">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+            <blockquote>"I stopped treating AI like a chatbot and started using it like a workflow partner. My weekly content planning now takes one focused hour."</blockquote>
+            <div class="person">
+              <span class="avatar">AK</span>
+              <div>
+                <strong>Aarav Kapoor</strong>
+                <span>Content Creator</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <div class="stars" aria-label="5 star rating">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+            <blockquote>"The prompt templates alone were worth it. I use them for research summaries, email drafts, and client proposal outlines every week."</blockquote>
+            <div class="person">
+              <span class="avatar">NM</span>
+              <div>
+                <strong>Nisha Mehta</strong>
+                <span>Marketing Consultant</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <div class="stars" aria-label="5 star rating">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+            <blockquote>"I am not technical, but the lessons made AI feel practical. I built a study system that helps me revise faster and understand topics better."</blockquote>
+            <div class="person">
+              <span class="avatar">RS</span>
+              <div>
+                <strong>Rohan Shah</strong>
+                <span>Graduate Student</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pricing-section" id="pricing">
+      <div class="page-shell pricing-wrap">
+        <div class="reveal">
+          <span class="eyebrow">Simple Pricing</span>
+          <h2>Get the complete AI Advantage Masterclass today.</h2>
+          <p class="lead">One focused program with lessons, templates, workflows, examples, and bonuses designed to help you build a durable AI advantage.</p>
+
+          <div class="pricing-points">
+            <div><span class="check-mark">✓</span>Made for beginners, creators, professionals, students, and small business owners</div>
+            <div><span class="check-mark">✓</span>Built around practical outcomes instead of tool hype</div>
+            <div><span class="check-mark">✓</span>Use the included templates immediately in your own work</div>
+          </div>
+        </div>
+
+        <aside class="pricing-card reveal" aria-label="AI Advantage Masterclass pricing">
+          <div class="price-kicker">AI Advantage Masterclass</div>
+          <h3>Complete program access</h3>
+          <div class="price">
+            <strong>&#8377;999</strong>
+            <span>&#8377;4,999</span>
+          </div>
+          <p>Launch pricing for learners who want to build practical AI skills before they become table stakes.</p>
+
+          <ul class="included-list">
+            <li><span class="check-mark">✓</span>6 learning modules</li>
+            <li><span class="check-mark">✓</span>Prompt templates</li>
+            <li><span class="check-mark">✓</span>Automation examples</li>
+            <li><span class="check-mark">✓</span>Certificate of completion</li>
+            <li><span class="check-mark">✓</span>Lifetime access</li>
+            <li><span class="check-mark">✓</span>Bonus AI toolkit</li>
+          </ul>
+
+          <a class="btn btn-primary" href="#final-cta">Enroll Now <span class="btn-arrow">-&gt;</span></a>
+          <p class="guarantee">Secure checkout demo section for portfolio presentation.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="faq">
+      <div class="page-shell">
+        <div class="section-heading center reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2>Questions before you join?</h2>
+          <p class="lead">A quick guide to access, skill level, templates, and how the course applies to real work.</p>
+        </div>
+
+        <div class="faq-list">
+          <article class="faq-item reveal is-open">
+            <button class="faq-question" type="button" aria-expanded="true">Is this course beginner friendly?</button>
+            <div class="faq-answer">
+              <p>Yes. The masterclass starts with simple foundations and gradually moves into prompts, workflows, automation examples, and practical use cases.</p>
+            </div>
+          </article>
+
+          <article class="faq-item reveal">
+            <button class="faq-question" type="button" aria-expanded="false">Do I need coding knowledge?</button>
+            <div class="faq-answer">
+              <p>No coding knowledge is required. The lessons focus on tools, prompts, processes, and everyday workflows that non-technical learners can use.</p>
+            </div>
+          </article>
+
+          <article class="faq-item reveal">
+            <button class="faq-question" type="button" aria-expanded="false">How long will I have access?</button>
+            <div class="faq-answer">
+              <p>You get lifetime access to the masterclass materials, so you can revisit lessons and templates whenever you need a refresher.</p>
+            </div>
+          </article>
+
+          <article class="faq-item reveal">
+            <button class="faq-question" type="button" aria-expanded="false">Will I get templates?</button>
+            <div class="faq-answer">
+              <p>Yes. The program includes prompt templates, workflow examples, planning frameworks, and a bonus AI toolkit for faster implementation.</p>
+            </div>
+          </article>
+
+          <article class="faq-item reveal">
+            <button class="faq-question" type="button" aria-expanded="false">Can I use this for business or freelancing?</button>
+            <div class="faq-answer">
+              <p>Absolutely. There are dedicated lessons for proposals, client research, content systems, business operations, SOPs, and service delivery.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta" id="final-cta">
+      <div class="page-shell">
+        <div class="cta-panel reveal">
+          <span class="eyebrow">Start Now</span>
+          <h2>Your AI Advantage Starts Today</h2>
+          <p>Stop watching AI change the world from the sidelines. Learn how to use it practically, confidently, and creatively.</p>
+          <a class="btn btn-primary" href="#pricing">Join the Masterclass <span class="btn-arrow">-&gt;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="page-shell footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#home">
+          <span class="brand-mark">AI</span>
+          <span>AI Advantage</span>
+        </a>
+        <p>Practical AI education for students, creators, professionals, and small business owners who want to work smarter with modern tools.</p>
+        <p class="copyright">&copy; 2026 AI Advantage. All rights reserved.</p>
+      </div>
+
+      <div class="footer-links" aria-label="Footer links">
+        <a href="#privacy">Privacy</a>
+        <a href="#terms">Terms</a>
+        <a href="mailto:hello@aiadvantage.example">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector("#menuToggle");
+    const navLinks = document.querySelector("#navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("is-open");
+      menuToggle.classList.toggle("is-open", isOpen);
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("is-open");
+        menuToggle.classList.remove("is-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open menu");
+      });
+    });
+
+    document.querySelectorAll(".faq-item").forEach((item) => {
+      const button = item.querySelector(".faq-question");
+      const answer = item.querySelector(".faq-answer");
+
+      const setHeight = () => {
+        answer.style.maxHeight = item.classList.contains("is-open") ? `${answer.scrollHeight}px` : "0px";
+      };
+
+      button.addEventListener("click", () => {
+        const isOpening = !item.classList.contains("is-open");
+
+        document.querySelectorAll(".faq-item").forEach((otherItem) => {
+          otherItem.classList.remove("is-open");
+          otherItem.querySelector(".faq-question").setAttribute("aria-expanded", "false");
+          otherItem.querySelector(".faq-answer").style.maxHeight = "0px";
+        });
+
+        if (isOpening) {
+          item.classList.add("is-open");
+          button.setAttribute("aria-expanded", "true");
+        }
+
+        setHeight();
+      });
+
+      setHeight();
+      window.addEventListener("resize", setHeight);
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+  </script>
+</body>
+</html>
